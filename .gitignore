@@ -1,0 +1,40 @@
+# Ignore compiled files
+*.class
+*.jar
+*.war
+*.ear
+
+# Ignore package files
+*.zip
+*.tar
+*.gz
+
+# Ignore log files
+*.log
+*.log.*
+*.log?
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore environment-specific files
+.env
+.env.local
+.env.*.local
+
+# Ignore vendor directory
+/vendor/
+
+# Ignore node_modules directory
+/backend/node_modules/
+/frontend/node_modules/
+
+# Ignore IDE-specific files
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Ignore Node.js package lock file
+package-lock.json
