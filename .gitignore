@@ -23,12 +23,10 @@ Thumbs.db
 .env.local
 .env.*.local
 
-# Ignore vendor directory
-/vendor/
-
 # Ignore node_modules directory
-/backend/node_modules/
-/frontend/node_modules/
+/node_modules/
+/server/node_modules/
+/html/node_modules/
 
 # Ignore IDE-specific files
 .idea/
