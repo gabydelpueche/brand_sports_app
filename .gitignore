@@ -25,7 +25,7 @@ Thumbs.db
 
 # Ignore node_modules directory
 /node_modules/
-/server/node_modules/
+/internal/node_modules/
 /html/node_modules/
 
 # Ignore IDE-specific files
