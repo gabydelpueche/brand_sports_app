@@ -3,6 +3,7 @@ const express = require("express");
 const validator = require('validator');
 const bcrypt = require('bcrypt');
 const { v4: uuidv4 } = require('uuid');
+const { availability } = require('./time_off');
 const app = express();
 const port = process.env.PORT;
 
@@ -72,7 +73,23 @@ app.post('/login', async(req, res) =>{
     }
 });
 
-// database.query("SELECT * FROM user_info", (err, res) =>{
+// generate workers
+app.get('/available_workers?query=1298471846178467', async(req, res) =>{
+    try {
+        const { date } = req.query.date;
+        
+        // add function to check availability 
+        // if available this day then return
+
+        res.status(200).json({status: 200, workers: data.rows[0]});
+
+    } catch (error) {
+        console.error('error loading users:', error);
+        res.status(500).json({status: 500, error: "internal server error", message: error.message});
+    };
+});
+
+// database.query("select * from user_info", (err, res) =>{
 //     if(err) {
 //         console.log(err)
 //     } else{

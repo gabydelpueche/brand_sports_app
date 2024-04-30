@@ -46,3 +46,20 @@ DROP TABLE IF EXISTS user_info;
 
 -- @block
 SELECT * FROM user_info
+
+-- Function for checking timestamp range
+-- @block
+CREATE OR REPLACE FUNCTION check_time(
+    start_time_1 TIMESTAMP,
+    end_time_1 TIMESTAMP,
+    start_time_2 TIMESTAMP,
+    end_time_2 TIMESTAMP
+) RETURNS BOOLEAN AS $$
+BEGIN
+    -- Check if the first time range falls within the second time range
+    RETURN (start_time_1 >= start_time_2 AND end_time_1 <= end_time_2);
+END;
+$$ LANGUAGE plpgsql;
+
+-- @block
+INSERT INTO time_off ()
