@@ -60,7 +60,13 @@ const manipulate = () => {
 		// Get timestamp of date being looped
 		let selected = new Date(year, month, i).getTime()
 		
-		lit += `<li class="${isToday}" onclick="console.log(${(selected)});">${i}</li>`;
+		lit += `<li class="${isToday}" 
+					hx-get="/available_workers?date=${selected}" 
+					hx-trigger="click"
+					hx-target="#results"
+					hx-swap="innerHTML">
+					${i}
+				</li>`;
 	}
 
 	// Loop to add the first dates of the next month

@@ -1,13 +1,30 @@
-const { database }  = require("./db");
+const { database }  = require("./public/db");
 const express = require("express");
 const validator = require('validator');
 const bcrypt = require('bcrypt');
+const path = require('path');
 const { v4: uuidv4 } = require('uuid');
-const { availability } = require('./time_off');
+const { availability } = require('./public/time_off');
 const app = express();
 const port = process.env.PORT;
 
+// set ejs as view engine
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+
 app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.get('/', async(req, res) =>{
+    try {
+        res.render('html/calender')
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).send('Internal Server Error');
+    
+    };
+});
 
 // register new user
 app.post('/register', async(req, res) =>{
@@ -74,7 +91,7 @@ app.post('/login', async(req, res) =>{
 });
 
 // generate workers
-app.get('/available_workers?query=1298471846178467', async(req, res) =>{
+app.get('/available_workers', async(req, res) =>{
     try {
         const { date } = req.query.date;
         
@@ -99,4 +116,4 @@ app.get('/available_workers?query=1298471846178467', async(req, res) =>{
 
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
-  });
+});

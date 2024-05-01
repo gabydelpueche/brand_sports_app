@@ -4,8 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-	<link href="../css/calender.css" rel="stylesheet"/>
-	<script src="../../server/calender/calender.js" defer></script>
+    <!-- Stylesheet -->
+	<link href="/views/css/calender.css" rel="stylesheets"/>
+    <!-- Server Script -->
+	<script src="/calender/calender.js" defer></script>
+    <!-- HTMX Script -->
+    <script src="https://unpkg.com/htmx.org@1.9.12" integrity="sha384-ujb1lZYygJmzgSwoxRggbCHcjc0rB2XoQrxeTUQyRjrOnlCoYta87iKBWq3EsdM2" crossorigin="anonymous"></script>
 </head>
 <body>
     <div class="calendar-container">
@@ -34,6 +38,8 @@
             </ul>
             <ul class="calendar-dates"></ul>
         </div>
+
+        <div id="results"></div>
     </div>
 </body>
 </html>
