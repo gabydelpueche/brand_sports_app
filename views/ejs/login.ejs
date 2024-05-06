@@ -10,16 +10,7 @@
 </head>
 <body>
     <div id="main">
-        <form hx-post="/register" hx-trigger="submit" hx-ext="json-enc">
-            <label for="fName">Name</label>
-            <input id="fName" type="text" name="fName" />
-
-            <label for="lName">Last name</label>
-            <input id="lName" type="text" name="lName" />
-
-            <label for="user_email">Email</label>
-            <input id="user_email" type="email" name="email" />
-
+        <form hx-post="/login" hx-trigger="submit" hx-ext="json-enc">
             <label for="username">Username</label>
             <input id="username" type="text" name="username"/>
 
@@ -29,7 +20,7 @@
             <button type="submit">Submit</button>
         </form>
 
-        <button hx-get="/login" hx-trigger="click" hx-swap="outerHTML" hx-target="#main">Login</button>
+        <button hx-get="/" hx-trigger="click" hx-swap="outerHTML" hx-target="#main">Register</button>
     </div>
 </body>
 </html>

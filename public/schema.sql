@@ -20,7 +20,6 @@ CREATE TABLE work_schedule(
 
 -- @block
 CREATE TABLE time_off(
-    id UUID PRIMARY KEY UNIQUE,                 -- Add unique
     worker UUID REFERENCES user_info(id),
     approved BOOLEAN,
     start_time TIMESTAMP,                       -- Switched these to timestamp as well to store the dates
@@ -45,7 +44,7 @@ CREATE TABLE switch_shifts(
 DROP TABLE IF EXISTS user_info;
 
 -- @block
-SELECT * FROM user_info
+SELECT * FROM user_info;
 
 -- Function for checking timestamp range
 -- @block
