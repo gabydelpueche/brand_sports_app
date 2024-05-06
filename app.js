@@ -4,7 +4,7 @@ const validator = require('validator');
 const bcrypt = require('bcrypt');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
-const { availability } = require('./public/time_off');
+const { availability } = require('./public/availability');
 const app = express();
 const port = process.env.PORT;
 
@@ -15,9 +15,22 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// render calender page
 app.get('/', async(req, res) =>{
     try {
-        res.render('html/calender')
+        res.render('ejs/register')
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).send('Internal Server Error');
+    
+    };
+});
+
+// render calender page
+app.get('/calender', async(req, res) =>{
+    try {
+        res.render('ejs/calender')
         
     } catch (error) {
         console.log(error);
@@ -93,12 +106,21 @@ app.post('/login', async(req, res) =>{
 // generate workers
 app.get('/available_workers', async(req, res) =>{
     try {
-        const { date } = req.query.date;
-        
-        // add function to check availability 
-        // if available this day then return
+        const { start_date } = req.query;
+        // const start_date = new Date(parseInt(date));
+        const get_date = start_date.getDate();
+        const end_date = new Date(start_date).setDate(get_date + 1);
 
-        res.status(200).json({status: 200, workers: data.rows[0]});
+        // const x = new Date(end_date)
+        
+        // console.log(date)
+        // console.log(start_date);
+        // console.log(end_date);
+        // console.log(x);
+
+        availability(start_date, end_date);
+
+        res.status(200).json({status: 200, workers: data.rows});
 
     } catch (error) {
         console.error('error loading users:', error);

@@ -8,7 +8,7 @@ async function availability(start, end){
         const time_start = records.rows[0].start_time;
         const time_end = records.rows[0].end_time;
 
-        const check_time = await database.query("SELECT * check_time($1, $2, $3, $4) as within_range", [time_start, time_end, start, end]);
+        const check_time = await database.query("SELECT * check_time($1, $2, $3, $4) as within_range", [time_start, time_end, start.getTime(), end.getTime()]);
         
         if(check_time.rows[0].within_range == false){
             return {
