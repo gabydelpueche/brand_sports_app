@@ -41,10 +41,10 @@ CREATE TABLE switch_shifts(
 );
 
 -- @block
-DROP TABLE IF EXISTS user_info;
+DROP TABLE IF EXISTS time_off;
 
 -- @block
-SELECT * FROM user_info;
+SELECT * FROM time_off;
 
 -- Function for checking timestamp range
 -- @block
@@ -61,4 +61,8 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- @block
-INSERT INTO time_off ()
+INSERT INTO time_off ();
+
+--@block
+DELETE FROM time_off 
+WHERE approved = false;

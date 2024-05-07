@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form hx-post="request_time_off" hx-trigger="submit" hx-ext="json-enc">
+            <label for="username">Username</label>
+            <input id="username" type="text" name="username" />
+
+            <label for="start_date">Start Date</label>
+            <input id="start_date" type="date" name="start_date" />
+
+            <label for="end_date">End Date</label>
+            <input id="end_date" type="date" name="end_date" />
+
+            <label for="reason">Reason for Request</label>
+            <input id="reason" type="text" name="reason"/>
+
+            <button type="submit">Submit</button>
+    </form>
+</body>
+</html>

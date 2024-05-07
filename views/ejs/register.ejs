@@ -27,9 +27,8 @@
             <input id="user_password" type="password" name="password"/>
 
             <button type="submit">Submit</button>
+            <button hx-get="/login" hx-trigger="click" hx-swap="outerHTML" hx-target="#main">Login</button>
         </form>
-
-        <button hx-get="/login" hx-trigger="click" hx-swap="outerHTML" hx-target="#main">Login</button>
     </div>
 </body>
 </html>

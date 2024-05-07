@@ -6,12 +6,14 @@
     <title>Document</title>
 </head>
 <body>
-    <button hx-get="/calender" hx-trigger="click">
-        View Schedule
-    </button>
+    <div id="main">
+        <button hx-get="/calender" hx-trigger="click" hx-swap="outerHTML" hx-target="#main">
+            View Schedule
+        </button>
 
-    <button>
-        Request Time Off
-    </button>
+        <button hx-get="/time_off" hx-trigger="click" hx-swap="outerHTML" hx-target="#main">
+            Request Time Off
+        </button>
+    </div>
 </body>
 </html>

@@ -18,9 +18,8 @@
             <input id="user_password" type="password" name="password"/>
 
             <button type="submit">Submit</button>
+            <button hx-get="/" hx-trigger="click" hx-swap="outerHTML" hx-target="#main">Register</button>
         </form>
-
-        <button hx-get="/" hx-trigger="click" hx-swap="outerHTML" hx-target="#main">Register</button>
     </div>
 </body>
 </html>
