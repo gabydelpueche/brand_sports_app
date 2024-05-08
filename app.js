@@ -5,9 +5,13 @@ const bcrypt = require('bcrypt');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 const { availability } = require('./public/availability');
-const e = require("express");
+const { check_time_off } = require('./public/check_time_off');
 const app = express();
 const port = process.env.PORT;
+
+// QUESTIONS
+// 1. how can i send my console logs back to frontend (or json)
+// 2. should i store the user in the session
 
 // set ejs as view engine
 app.set('view engine', 'ejs');
@@ -177,18 +181,37 @@ app.post('/request_time_off', async(req, res) =>{
     try {
         const { username, start_date, end_date, reason } = req.body;
 
+        // pull timestamp from date inputs 
         const start = new Date(start_date);
         const end = new Date(end_date);
-        
+         
+        // checking to see if username inputted exists
+        // need to change this so that they can only use their username
         const user_id = await database.query('SELECT id FROM user_info WHERE username = $1;', [username]);
 
+        // if user exists add them to database
+        // if they don't respond with correct credentials
+        // need to add something to throw errors 
         if(user_id){
             // await database.query('UPDATE time_off SET approved = $1, start_time = $2, end_time = $3, reason = $4, created_at = $5 WHERE worker = $6;', [false, start, end, reason, new Date(), user_id.rows[0].id]);
-            await database.query(
-                'INSERT INTO time_off (worker, approved, start_time, end_time, reason, created_at) VALUES ($1, $2, $3, $4, $5, $6);',
-                [user_id.rows[0].id, false, start, end, reason, new Date()]
+            check_time_off(start, end, user_id.rows[0].user_id);
+
+            if(res.time_available == true){
+                await database.query(
+                    'INSERT INTO time_off (worker, approved, start_time, end_time, reason, created_at) VALUES ($1, $2, $3, $4, $5, $6);',
+                    [user_id.rows[0].id, false, start, end, reason, new Date()]
                 );
-            console.log("Request has been sent");
+                console.log("Request has been sent");
+                
+            } else if(res.time_available == false){
+                // send back the time they got off already & message 
+                console.log("You already requested time off during this period")
+
+            } else{
+                // fix this error cause this is not helpful
+               console.log("An error occured checking the time") 
+            };
+        
         } else{
             console.log("Incorrect credentials, try again")
         };
