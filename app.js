@@ -17,7 +17,7 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // GET REQUESTS
-// render calender page
+// render register page
 app.get('/', async(req, res) =>{
     try {
         res.render('ejs/register')
@@ -29,6 +29,7 @@ app.get('/', async(req, res) =>{
     };
 });
 
+// render login page
 app.get('/login', async(req, res) =>{
     try {
         res.render('ejs/login')
@@ -37,6 +38,26 @@ app.get('/login', async(req, res) =>{
         console.log(error);
         res.status(500).send('Internal Server Error');
     
+    };
+});
+
+// render home page
+app.get('/home/:id', async(req, res) => {
+    try {
+        const data = await database.query('SELECT * FROM user_info WHERE id = $1', [req.params.id]);
+
+        if(data){
+            res.render("ejs/home", {
+                username : data.rows[0].username, 
+                first_name : data.rows[0].first_name, 
+                last_name : data.rows[0].last_name, 
+                id: data.rows[0].id 
+            });
+        };
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).send('Internal Server Error');
     };
 });
 
@@ -52,23 +73,16 @@ app.get('/calender', async(req, res) =>{
     };
 });
 
-// render home page
-app.get('/home', async(req, res) =>{
-    try {
-        res.render('ejs/home')
-        
-    } catch (error) {
-        console.log(error);
-        res.status(500).send('Internal Server Error');
-    
-    };
-});
-
 // render calender page
-app.get('/time_off', async(req, res) =>{
+app.get('/time_off/:id', async(req, res) =>{
     try {
-        res.render('ejs/request_time_off')
-        
+        let id = req.params.id;
+        const data = await database.query("SELECT * FROM user_info WHERE id = $1;", [id]);
+
+        if(data){
+            res.render('ejs/request_time_off', { username : data.rows[0].username, id: id });
+        } 
+
     } catch (error) {
         console.log(error);
         res.status(500).send('Internal Server Error');
@@ -132,11 +146,7 @@ app.post('/register', async(req, res) =>{
         // add user to user_info DB
         const data = await database.query("INSERT INTO user_info (id, first_name, last_name, username, email, password, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *;", [uuid, fName, lName, username, email, hashedPassword, timestamp]);
 
-
-        // res.status(201).json({status: 201, message: "Success", user: data.rows[0]});
-        // return
-
-        res.redirect('/home')
+        res.redirect(`/home/${data.rows[0].id}`);
 
     } catch (error) {
         console.error('Error adding user:', error);
@@ -157,11 +167,8 @@ app.post('/login', async(req, res) =>{
         };
         
         if (await bcrypt.compare(password, data.rows[0].password)) {
-            // res.status(200).json({status: 200, message: "Success"});
-            // // add code to redirect to home page
-            // return
+            res.redirect(`/home/${data.rows[0].id}`);
 
-            res.redirect('/home');
         } else {
             res.status(401).json({status: 401, error: error.message, message: "Invalid credentials"});
             return
@@ -173,29 +180,27 @@ app.post('/login', async(req, res) =>{
     }
 });
 
-app.post('/request_time_off', async(req, res) =>{
+// request time off
+app.post('/request_time_off/:id', async(req, res) =>{
     try {
-        const { username, start_date, end_date, reason } = req.body;
-
-        const start = new Date(start_date);
-        const end = new Date(end_date);
+        const { start_date, end_date, reason } = req.body;
+        let id = req.params.id;
         
-        const user_id = await database.query('SELECT id FROM user_info WHERE username = $1;', [username]);
+        const exists = await database.query('SELECT * FROM user_info WHERE id = $1;', [id]);
 
-        if(user_id){
-            // await database.query('UPDATE time_off SET approved = $1, start_time = $2, end_time = $3, reason = $4, created_at = $5 WHERE worker = $6;', [false, start, end, reason, new Date(), user_id.rows[0].id]);
+        if(exists){
             await database.query(
                 'INSERT INTO time_off (worker, approved, start_time, end_time, reason, created_at) VALUES ($1, $2, $3, $4, $5, $6);',
-                [user_id.rows[0].id, false, start, end, reason, new Date()]
-                );
-            console.log("Request has been sent");
-        } else{
-            console.log("Incorrect credentials, try again")
+                [id, false, start_date, end_date, reason, new Date()]
+            );
+            
+            res.render("ejs/success_time_off", { start : start_date, end : end_date, id : id });
         };
+
     } catch (error) {
         console.error('Error sending time off request:', error);
         res.status(500).json({status: 500, error: "internal server error", message: error.message});
-    }    
+    }; 
 });
 
 

@@ -6,9 +6,8 @@
     <title>Document</title>
 </head>
 <body>
-    <form hx-post="request_time_off" hx-trigger="submit" hx-ext="json-enc">
-            <label for="username">Username</label>
-            <input id="username" type="text" name="username" />
+    <form hx-post="/request_time_off/<%= id %>" hx-trigger="submit" hx-ext="json-enc">
+            <p id="username" name="username"><%= username %></p>
 
             <label for="start_date">Start Date</label>
             <input id="start_date" type="date" name="start_date" />
