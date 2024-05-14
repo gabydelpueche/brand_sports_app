@@ -5,9 +5,13 @@ const bcrypt = require('bcrypt');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 const { availability } = require('./public/availability');
-const e = require("express");
+const { check_time_off } = require('./public/check_time_off');
 const app = express();
 const port = process.env.PORT;
+
+// QUESTIONS
+// 1. how can i send my console logs back to frontend (or json)
+// 2. should i store the user in the session
 
 // set ejs as view engine
 app.set('view engine', 'ejs');
