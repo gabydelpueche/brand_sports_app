@@ -14,8 +14,8 @@ A Node.js application to manage user registration, login, viewing a calendar, an
 
 1. Clone the repository:
     ```sh
-    git clone https://github.com/your-username/work-schedule-app.git
-    cd work-schedule-app
+    git clone https://github.com/gabydelpueche/brand_sports_app.git
+    cd work-program
     ```
 
 2. Install dependencies:
@@ -31,7 +31,7 @@ A Node.js application to manage user registration, login, viewing a calendar, an
 
 4. Run the application:
     ```sh
-    npm start
+    npm app
     ```
 
 ## Usage
