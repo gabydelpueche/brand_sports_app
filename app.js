@@ -95,9 +95,9 @@ app.get('/time_off/:id', async(req, res) =>{
 });
 
 // generate workers
-app.get('/available_workers', async(req, res) =>{
+app.get('/available_workers/:date', async(req, res) =>{
     try {
-        const { start_date } = req.query;
+        const { start_date } = req.params.date;
         // const start_date = new Date(parseInt(date));
         const get_date = start_date.getDate();
         const end_date = new Date(start_date).setDate(get_date + 1);
@@ -193,12 +193,19 @@ app.post('/request_time_off/:id', async(req, res) =>{
         const exists = await database.query('SELECT * FROM user_info WHERE id = $1;', [id]);
 
         if(exists){
-            await database.query(
-                'INSERT INTO time_off (worker, approved, start_time, end_time, reason, created_at) VALUES ($1, $2, $3, $4, $5, $6);',
-                [id, false, start_date, end_date, reason, new Date()]
-            );
+            let check = check_time_off(start_date, end_date, id);
+
+            if(check.available == false){
+                res.render("ejs/fail_time_off", { start : start_date, end : end_date, id : id });
+                
+            } else{
+                await database.query(
+                    'INSERT INTO time_off (worker, approved, start_time, end_time, reason, created_at) VALUES ($1, $2, $3, $4, $5, $6);',
+                    [id, false, start_date, end_date, reason, new Date()]
+                );
             
-            res.render("ejs/success_time_off", { start : start_date, end : end_date, id : id });
+                res.render("ejs/success_time_off", { start : start_date, end : end_date, id : id });
+            };
         };
 
     } catch (error) {
