@@ -7,11 +7,15 @@
 </head>
 <body>
     <div id="main">
+        <div>
+            <h1><%= username %></h1>
+            <p> Welcome <%= first_name %></p>
+        </div>
         <button hx-get="/calender" hx-trigger="click" hx-swap="outerHTML" hx-target="#main">
             View Schedule
         </button>
 
-        <button hx-get="/time_off" hx-trigger="click" hx-swap="outerHTML" hx-target="#main">
+        <button hx-get="/time_off/<%= id %>" hx-trigger="click" hx-swap="outerHTML" hx-target="#main">
             Request Time Off
         </button>
     </div>

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="main">
+        <h1>Failure</h1>
+        <p>A request for time off between <%= start %> to <%= end %> has been denied<br>
+        You have already requested time off during this time period.</p>
+        <button hx-get="/home/<%= id %>" hx-trigger="click" hx-target="#main" hx-swap="outerHTML">Go back to Home</button>
+    </div>
+</body>
+</html>
