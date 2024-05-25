@@ -6,6 +6,7 @@ const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 const { availability } = require('./public/availability');
 const { check_time_off } = require('./public/check_time_off');
+const { error } = require("console");
 const app = express();
 const port = process.env.PORT;
 
@@ -187,34 +188,28 @@ app.post('/request_time_off', async(req, res) =>{
          
         // checking to see if username inputted exists
         // need to change this so that they can only use their username
-        const user_id = await database.query('SELECT id FROM user_info WHERE username = $1;', [username]);
+        const user = await database.query('SELECT id FROM user_info WHERE username = $1;', [username]);
 
-        // if user exists add them to database
-        // if they don't respond with correct credentials
-        // need to add something to throw errors 
-        if(user_id){
-            // await database.query('UPDATE time_off SET approved = $1, start_time = $2, end_time = $3, reason = $4, created_at = $5 WHERE worker = $6;', [false, start, end, reason, new Date(), user_id.rows[0].id]);
-            check_time_off(start, end, user_id.rows[0].user_id);
-
-            if(res.time_available == true){
-                await database.query(
-                    'INSERT INTO time_off (worker, approved, start_time, end_time, reason, created_at) VALUES ($1, $2, $3, $4, $5, $6);',
-                    [user_id.rows[0].id, false, start, end, reason, new Date()]
-                );
-                console.log("Request has been sent");
-                
-            } else if(res.time_available == false){
-                // send back the time they got off already & message 
-                console.log("You already requested time off during this period")
-
-            } else{
-                // fix this error cause this is not helpful
-               console.log("An error occured checking the time") 
-            };
-        
-        } else{
-            console.log("Incorrect credentials, try again")
+        if(user.rows.length === 0){
+            return res.status(401).json({status: 401, message: "Username enetered was not found"});
         };
+
+        const user_id = user.rows[0].id;
+
+        const check = await check_time_off(start, end, user_id);
+
+        if(check){
+            return res.status(400).json({status: 400, message: "You have already requested this time off", reason: user.rows[0].reason});
+        };
+
+        await database.query(
+            'INSERT INTO time_off (worker, approved, start_time, end_time, reason, created_at) VALUES ($1, $2, $3, $4, $5, $6);',
+            [user_id, false, start, end, reason, new Date()]
+        );
+
+        console.log("Request has been sent");
+        res.status(201).json({status: 201, message: "Your time off has been sent in and it waiting approval"})
+
     } catch (error) {
         console.error('Error sending time off request:', error);
         res.status(500).json({status: 500, error: "internal server error", message: error.message});
